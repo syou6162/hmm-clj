@@ -9,7 +9,7 @@
 ;; http://www.cs.sjsu.edu/faculty/stamp/RUA/HMM.pdf
 
 (defstruct hmm :n :m :init-probs :emission-probs :state-transitions)
- 
+
 (defn make-hmm [{:keys [states, obs, init-probs, emission-probs, state-transitions]}]
   (struct-map hmm
     :n (count states)
@@ -19,11 +19,12 @@
     :init-probs init-probs ;; n x n
     :emission-probs emission-probs ;; n x m
     :state-transitions state-transitions))
- 
+
 (defn indexed [s]
   (map vector (iterate inc 0) s))
- 
+
 (defn argmax [coll]
+  "Return the maximum index and its value"
   (loop [s (indexed coll)
          max (first s)]
     (if (empty? s)
@@ -35,7 +36,7 @@
           (recur (rest s) max))))))
 
 (defn init-alphas [hmm obs]
-  "alpha_0(i) = pi_i b_i(o_0)"
+  "alpha_0(i) = pi_i b_i(o_0) for all i"
   (map (fn [x]
          (* (aget (:init-probs hmm) x) (aget (:emission-probs hmm) x obs)))
        (range (:n hmm))))
@@ -70,9 +71,9 @@
            (recur (rest obs)
                   alphas
                   (conj c c-t)))))))
- 
+
 (defn delta-max [hmm deltas obs]
-  "delta_t(i) = log(b_i(o_t)) + max_j {delta_{t - 1}(j) + log(a_{j, i})}"
+  "delta_t(i) = log(b_i(o_t)) + max_j {delta_{t - 1}(j) + log(a_{j, i})} for all i"
   (map (fn [j]
          (+ (apply max (map (fn [i]
                               (+ (nth deltas i)
@@ -99,7 +100,7 @@
 
 (defn viterbi [hmm observs]
   "Return the pair of best path and its probability."
-  (loop [obs (rest observs)
+  (loop [obs (rest observs) ;; rest of the observations
          deltas (map #(Math/log %) (init-alphas hmm (first observs)))
          paths []]
     (if (empty? obs)
