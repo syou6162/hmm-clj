@@ -79,7 +79,7 @@
                                   (vec (repeat n (vec (repeat m 0))))
                                   (apply concat tag-to-word-seq))
         tag-to-tag-prob (table-to-prob tag-to-tag-count 0.5)
-        tag-to-word-prob (table-to-prob tag-to-word-count 0.5)
+        tag-to-word-prob (table-to-prob tag-to-word-count 0.01)
         pi-sum (count (map (comp second first) sequences))
         pi (double-array (reduce
                           (fn [result [k v]] (assoc result k (/ v pi-sum)))
