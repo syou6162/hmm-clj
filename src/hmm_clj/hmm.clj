@@ -93,9 +93,9 @@
 (defn update-paths [hmm deltas]
   (map (fn [j]
          (first (argmax (map (fn [i]
-                                  (* (nth deltas i)
-                                     (aget (:state-transitions hmm) i j)))
-                                (range (:n hmm))))))
+                               (+ (nth deltas i)
+                                  (Math/log (aget (:state-transitions hmm) i j))))
+                             (range (:n hmm))))))
        (range (:n hmm))))
 
 (defn viterbi [hmm observs]
