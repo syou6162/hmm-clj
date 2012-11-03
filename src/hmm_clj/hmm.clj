@@ -38,7 +38,7 @@
 (defn init-alphas [hmm obs]
   "alpha_0(i) = pi_i b_i(o_0) for all i"
   (map (fn [x]
-         (* (aget (:init-probs hmm) x) (aget (:emission-probs hmm) x obs)))
+         (* (get (:init-probs hmm) x) (get-in (:emission-probs hmm) [x obs])))
        (range (:n hmm))))
 
 (defn scaling [coll]
@@ -51,10 +51,10 @@
      "alpha_t(i) for all i, and t is the index of obs"
      (let [alpha-t (map (fn [j]
                           (* (reduce (fn [sum i]
-                                       (+ sum (* (nth alphas i) (aget (:state-transitions hmm) i j))))
+                                       (+ sum (* (nth alphas i) (get-in (:state-transitions hmm) [i j]))))
                                      0
                                      (range (:n hmm)))
-                             (aget (:emission-probs hmm) j obs))) (range (:n hmm)))]
+                             (get-in (:emission-probs hmm) [j obs]))) (range (:n hmm)))]
        [(scaling alpha-t) (/ 1.0 (reduce + alpha-t))]))
   ([hmm observs]
      "Forward probability P(O) = sum_i alpha_T(i),
@@ -77,9 +77,9 @@
   (map (fn [j]
          (+ (apply max (map (fn [i]
                               (+ (nth deltas i)
-                                 (Math/log (aget (:state-transitions hmm) i j))))
+                                 (Math/log (get-in (:state-transitions hmm) [i j]))))
                             (range (:n hmm))))
-            (Math/log (aget (:emission-probs hmm) j obs))))
+            (Math/log (get-in (:emission-probs hmm) [j obs]))))
        (range (:n hmm))))
 
 (defn backtrack [paths deltas]
@@ -94,7 +94,7 @@
   (map (fn [j]
          (first (argmax (map (fn [i]
                                (+ (nth deltas i)
-                                  (Math/log (aget (:state-transitions hmm) i j))))
+                                  (Math/log (get-in (:state-transitions hmm) [i j]))))
                              (range (:n hmm))))))
        (range (:n hmm))))
 

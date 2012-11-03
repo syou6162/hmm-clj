@@ -55,12 +55,12 @@
   "Calculate the conditional probability
    for each column using Lidstone's law."
   (let [ncol (count table)]
-    (into-array (vec (map
-                      (fn [col-idx]
-                        (let [col (nth table col-idx)
-                              sum (+ (reduce + col) (* (count col) delta))]
-                          (double-array (map #(/ (+ % delta) sum) col))))
-                      (range ncol))))))
+    (vec (map
+          (fn [col-idx]
+            (let [col (nth table col-idx)
+                  sum (+ (reduce + col) (* (count col) delta))]
+              (vec (map #(/ (+ % delta) sum) col))))
+          (range ncol)))))
 
 (defn inv-obj-to-obj [obj-to-obj]
   "[[:a 1] [:b 2]] => [[1 :a] [:2 b]]"
