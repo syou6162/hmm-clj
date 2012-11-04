@@ -91,6 +91,7 @@
       (recur (rest path) (nth (first path) term) (conj backtrack term)))))
 
 (defn update-paths [hmm deltas]
+  "psi_{t+1}(j) = argmax_i [delta_t(i) + log(a_{i, j})]"
   (map (fn [j]
          (first (argmax (map (fn [i]
                                (+ (nth deltas i)
