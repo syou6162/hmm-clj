@@ -81,15 +81,14 @@
         tag-to-tag-prob (table-to-prob tag-to-tag-count 0.5)
         tag-to-word-prob (table-to-prob tag-to-word-count 0.01)
         pi-sum (count (map (comp second first) sequences))
-        pi (double-array (reduce
-                          (fn [result [k v]] (assoc result k (/ v pi-sum)))
-                          (vec (repeat n 0))
-                          (frequencies (map (comp second first) sequences))))
+        pi (reduce
+            (fn [result [k v]] (assoc result k (/ v pi-sum)))
+            (vec (repeat n 0))
+            (frequencies (map (comp second first) sequences)))
         my-hmm (struct hmm n m pi tag-to-word-prob tag-to-tag-prob)]
     (let [test-sequences (read-test-sequences "test.txt" m)
           observs-seq (map (fn [seq] (map first seq)) test-sequences)
           gold-pos-tag-seq (map (fn [seq] (map second seq)) test-sequences)
-          _ (println "Started decoding...")
           result (apply concat
                         (pmap (fn [[observs gold-pos-tag]]
                                 (let [[viterbi-path _] (viterbi my-hmm observs)
