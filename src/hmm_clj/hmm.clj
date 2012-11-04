@@ -101,11 +101,11 @@
 
 (defn viterbi [hmm observs]
   "Return the pair of best path and its probability."
-  (loop [obs (rest observs) ;; rest of the observations
+  (loop [obs-idx 1
          deltas (map #(Math/log %) (init-alphas hmm (first observs)))
          paths []]
-    (if (empty? obs)
+    (if (= obs-idx (count observs))
       [(backtrack paths deltas) (Math/exp (apply max deltas))]
-      (recur (rest obs)
-             (delta-max hmm deltas (first obs))
+      (recur (inc obs-idx)
+             (delta-max hmm deltas (nth observs obs-idx))
              (conj paths (update-paths hmm deltas))))))
