@@ -4,6 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.4.0"]
-                 [info.yasuhisay/clj-utils "0.1.0-SNAPSHOT"]]
+                 [info.yasuhisay/clj-utils "0.1.0-SNAPSHOT"]
+                 [fobos_multiclass_clj "0.1.4"]]
   :jvm-opts ["-Xmx8g" "-server" "-Dfile.encoding=UTF-8"]
   :main hmm-clj.core)

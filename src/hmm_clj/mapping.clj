@@ -3,3 +3,5 @@
 
 (def-obj-and-id-mapping word)
 (def-obj-and-id-mapping pos)
+
+(def-obj-and-id-mapping feature)
